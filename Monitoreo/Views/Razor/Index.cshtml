@@ -1,0 +1,191 @@
+﻿@{
+    ViewBag.Title = "Index";
+
+}
+<title>Razro sintaxis</title>
+<head>
+    Script head
+</head>
+<h1>Desarrollo servicios web con razor</h1>
+<style type="text/css">
+    body {
+        background-color: beige;
+        font-family: Verdana,Arial;
+        margin: 50px;
+    }
+
+    form {
+        padding: 10px;
+        border-style: solid;
+        width: 950px;
+    }
+</style>
+<body>
+
+    <form action="" method="post">
+        @{
+            //Suma de numero
+
+            var total = 0;
+            var totalMessage = "";
+            if (IsPost)
+            {
+                //retrive informacion that user enter
+                var numer1 = Request["Text1"];
+                var numero2 = Request["Text2"];
+                if (numer1.IsInt() == true && numero2.IsInt() == true)
+                {
+                    total = numer1.AsInt() + numero2.AsInt();
+                    totalMessage = total + "  Total";
+                }
+                else
+                {
+                    totalMessage = "Convert to Int is fail";
+
+
+                }
+            }
+
+        }
+
+        @{
+            var result = "";
+            if (IsPost)
+            {
+                result = "This page was posted using the submit button";
+
+            }
+            else
+            {
+                result = "This was the first  request for the page";
+            }
+
+
+
+        }
+
+        @using System.Collections.Generic;
+        <h2>Index</h2>
+        @for (int i = 0; i <= 3; i++)
+        {
+            <p> Time usign razor sintaxys  @DateTime.Now </p>
+            <h3>@i;</h3>
+
+        }
+
+        <p>;</p>
+        <h3>Enter the name of othre teww</h3>
+        <input type="text" name="Tww" value="12345">
+        <input type="submit" value="submit" />
+        @*<p>@Request["Tww"].Length</p>;*@
+
+        @if (Request["Tww"].IsEmpty())
+        {
+            //Console.WriteLine("Valor Vacacio");
+            <pre> valor Vacio
+        en esta pagina </pre>
+        }
+        else
+        {
+        }
+
+        @{var message = "Hello Word this is sintax razor";}
+        <table border="2">
+            <tr>
+                <td>Request URl</td>
+                <td>Relative Path</td>
+                <td>Full Path</td>
+                <td>Http Request Type</td>
+            </tr>
+            <tr>
+                <td>@Request.Url</td>
+                <td>@Request.FilePath</td>
+                <td>@Request.MapPath(Request.FilePath)</td>
+                <td>@Request.RequestType</td>
+            </tr>
+
+        </table>
+        <p>@result</p>
+
+        <p>Enter dos numeros and then click <strong>ADD.</strong></p>
+        <p><label for="text1">First Numer</label></p>
+        <input type="text" name="Text1" />
+        <br />
+
+        <p><label for="text2">Second Numer</label></p>
+        <input type="text" name="Text2" />
+
+        <p><input type="submit" value="Open File" name="submit" /></p>
+        @{
+            @: Total del calculo es <h3> @total</h3>
+            @: Total Message <h2>@totalMessage</h2>
+        }
+        <p>Imagen <img src="@Href("~/img")/header_home.jpg" width="50px" /></p>
+        <ul @foreach (var reque in Request.ServerVariables) {
+            <li>@reque</li>}
+
+</ul>
+
+@{
+    var path = this.Request.PhysicalPath;
+    var RequestURL = this.Request.Url;
+
+
+
+
+}
+
+
+<h4>@path</h4>
+<h4>@RequestURL</h4>
+<a href="@RequestURL"> my page</a>
+@{
+    var dataFilePath = "~/Nuevo documento de texto.txt";
+    var fileConent = "";
+    var PhisicalPath = Server.MapPath(dataFilePath);
+    var Usermasagge = "Helllo the time is" + DateTime.Now;
+    var UserError = "";
+    var ErrorMessage = "";
+    if (IsPost)
+    {
+        try
+        {
+            fileConent = File.ReadAllText(@"D:\Nuevo documento de texto.txt");
+
+
+
+        }
+
+        catch (FileNotFoundException ex)
+        {
+            ErrorMessage = ex.Message;
+            Usermasagge = "A file  could not be opened please contact with your admistrator";
+
+        }
+        catch (DirectoryNotFoundException exdir)
+        {
+
+
+            ErrorMessage = exdir.Message;
+            Usermasagge = "Directory was not found please contact width your administrator";
+
+        }
+
+
+    }
+
+
+    else
+    {
+
+        //First time the page is requested create the file
+        File.WriteAllText(PhisicalPath, Usermasagge);
+    }
+
+
+
+}
+<p>@fileConent</p>
+<p>@Usermasagge</p>
+    </form>
+</body>

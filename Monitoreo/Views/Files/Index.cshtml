@@ -1,0 +1,136 @@
+﻿@{
+    var result = "";
+    var ShowInformatioFile = "";
+    Array UserDataGet = null;
+    char[] delimiterChar = { ',' };
+    if (IsPost)
+    {
+        var FirstName = Request["FirstName"];
+        var LastName = Request["LastName"];
+        var Email = Request["Email"];
+        var UserData = FirstName + "," + LastName + "," + Email + Environment.NewLine;
+        var DataFile = Server.MapPath("~/Files/FileConstant/CIPSFiles.csv");
+        if (File.Exists(DataFile))
+        {
+            File.AppendAllText(@DataFile, UserData);
+        
+        }
+        else
+        {
+            File.WriteAllText(@DataFile, UserData);
+        
+        }
+        result = "Information Save";
+
+       
+        var DataFileRead = Server.MapPath("~/Files/FileConstant/CIPSFiles.csv");
+
+        if (File.Exists(DataFileRead))
+        {
+            UserDataGet = File.ReadAllLines(DataFileRead);
+            if (UserDataGet == null)
+            {
+                ShowInformatioFile = "The File is empty";
+
+            }
+
+
+        }
+        else
+        {
+            ShowInformatioFile = "The file does not exist";
+            UserDataGet="There is not information".ToArray();
+        }
+
+
+
+    }
+    }
+    
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File content</title>
+    <script src="~/js/jquery-1.4.1.js"></script>
+    <script src="~/js/jquery-1.4.1.min.js"></script>
+    <script src="~/js/JavaScriptSoporte.js" type="text/javascript"></script>
+</head>
+<script type="text/javascript">
+
+        @{
+            <Text>
+        alert(@result);
+
+            </text>
+
+
+        }
+
+</script>
+<body>
+
+    <form action="" method="post">
+        <div>
+            <table>
+                <tr>
+                    <td>First Name</td>
+                    <td><input type="text" id="FirstName" name="FirstName" /></td>
+                </tr>
+                <tr>
+                    <td>Last Name</td>
+                    <td><input type="text" id="LastName" name="LastName" /></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td><input type="text" id="Email" name="Email" /></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td><input type="submit" value="Submit" /></td>
+                </tr>
+            </table>
+
+        </div>
+        <div>
+            @if (result != "")
+            { 
+            <p>Result :@result</p>
+            }
+                
+        </div>
+        <div>
+            @ShowInformatioFile
+            @{
+         if(IsPost)
+         { 
+           
+                
+            if (ShowInformatioFile == "")
+            { 
+            <ol>
+                @foreach (string dataLine in UserDataGet)
+                { 
+                
+                <li>User
+                <ul>
+                    @foreach (string DataItem in dataLine.Split(delimiterChar))
+                    { 
+                    <li>@DataItem</li>
+                    
+                    }
+                </ul>
+                </li>
+                }
+
+            </ol>
+            }
+            
+            }
+            }
+        </div>
+
+    </form>
+
+</body>
+</html>

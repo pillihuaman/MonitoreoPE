@@ -1,0 +1,108 @@
+﻿
+
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function ($) {
+        $.datepicker.regional['es'] = {
+            closeText: 'Cerrar',
+            prevText: '<Ant',
+            nextText: 'Sig>',
+            currentText: 'Hoy',
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+            dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+            weekHeader: 'Sm',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+    });
+    $(function () {
+        $("#datepicker").datepicker();
+
+        //$('#datepicker').datepicker({ dateFormat: 'yyy-dd-mm HH:MM:ss' }).val();
+    });
+</script>
+
+<h1>Conciliacion Banbif </h1>
+
+<div style="text-align:center">
+    <p>Selecionar archivos</p>
+    <p>Date: <input type="text" id="datepicker"></p>
+
+    <input type="file" class="File" name="File" id="File" />
+    <input type="button" onclick="Procesar_Ripley()" id="Btn_Procesar_Ripley" value="Procesar Liquidacion Banbif" />
+</div>
+<input type="button" onclick="Procesar_Operaciones_Ripley()" id="Btn_Procesar_Ripley" value="Procesar" />
+
+<div>
+    <table id="tblOperaciones" border="1" style="border:solid"></table>
+
+</div>
+
+<script type="text/javascript">
+
+    function Procesar_Ripley() {
+        var trHTML = '';
+        $("#tblOperaciones tr").remove();
+
+        var FormtData = new FormData(); //Fomato para acceder a archivos
+        var FileExcelRipley = document.getElementById('File'); // nombre del archivo
+        var FechaProceso = document.getElementById('datepicker').value; // Fecha
+
+
+        var JsonObjects
+        FormtData.append('FechaProceso', FechaProceso);
+
+        for (i = 0; i < FileExcelRipley.files.length; i++) {
+            FormtData.append(FileExcelRipley.files[i].name, FileExcelRipley.files[i]); // insercion  de valor y nombre de todos los archivos selecccionados
+        }
+
+        var ObjetoXMLHttpRequest = new XMLHttpRequest(); // metodo utilizado
+        ObjetoXMLHttpRequest.open("POST", "/ConciliacionBanbif/ProcesarLiquidacionBanbif");
+        ObjetoXMLHttpRequest.send(FormtData);
+        //ObjetoXMLHttpRequest.send(FormtData);
+
+        ObjetoXMLHttpRequest.onreadystatechange = function () {
+            if (ObjetoXMLHttpRequest.readyState === 4 && ObjetoXMLHttpRequest.status === 200) {
+                JsonObjects = JSON.parse(ObjetoXMLHttpRequest.responseText);
+
+                trHTML = '<tr><td>Index</td><td>Trama</td><td>Nombre Archivo</td></tr>';
+
+                var Index = 1;
+                Jsonresponse = JSON.parse(ObjetoXMLHttpRequest.responseText);
+                var result = $.parseJSON(ObjetoXMLHttpRequest.responseText);
+                var Contador = Object.keys(result).length;
+
+                $.each(result, function (k, v) {
+                    trHTML += '<tr><td>' + Index + '</td>' +'<td>' + v + '</td></tr>';
+                            Index++;
+                  
+
+
+                }
+
+
+                );
+
+                $('#tblOperaciones').append(trHTML);
+
+            }
+        };
+
+
+    }
+
+    //}
+
+</script>

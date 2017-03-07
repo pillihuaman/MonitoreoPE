@@ -1,0 +1,232 @@
+﻿
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function ($) {
+        $.datepicker.regional['es'] = {
+            closeText: 'Cerrar',
+            prevText: '<Ant',
+            nextText: 'Sig>',
+            currentText: 'Hoy',
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+            dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+            weekHeader: 'Sm',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+    });
+    $(function () {
+        $("#datepicker").datepicker();
+
+        //$('#datepicker').datepicker({ dateFormat: 'yyy-dd-mm HH:MM:ss' }).val();
+    });
+</script>
+
+<h1>Procesar Trama Ripley</h1>
+
+<div style="text-align:center">
+    <p>Selecionar archivos</p>
+    <p>Date: <input type="text" id="datepicker"></p>
+
+    <input type="file" class="File" name="File" id="File" />
+    <input type="button" onclick="Procesar_Ripley()" id="Btn_Procesar_Ripley" value="Procesar Trama Ripley" />
+</div>
+<input type="button" onclick="Procesar_Operaciones_Ripley()" id="Btn_Procesar_Ripley" value="Procesar" />
+<div id="OperacionResumen">
+    <table border="1"><tr><td>Operaciones Excel Ripley</td><td>Operaciones de Validacion resultado de la Trama</td></tr>
+    <tr><td><label id="MontoTotalExcel"></label></td><td><label id="MontoTotalTrama"></label></td></tr>
+        <tr><td><label id="SumaComisionExcel"></label></td><td><label id="SumaComisionTrama"></label></td></tr>
+        <tr><td><label id="TotalTransferirExcel"></label></td><td><label id="TotalTransferirTrama"></label></td></tr>
+    </table>
+</div>
+<div>
+    <table id="tblOperaciones" border="1" style="border:solid"></table>
+
+</div>
+
+<script type="text/javascript">
+
+    function Procesar_Ripley() {
+        var trHTML = '';
+        //$('#tblOperaciones').append(trHTML);
+        //if (Window.FormData !== undefined)
+        //{
+        $("#tblOperaciones tr").remove();
+
+        var FormtData = new FormData(); //Fomato para acceder a archivos
+        var FileExcelRipley = document.getElementById('File'); // nombre del archivo
+        var FechaProceso = document.getElementById('datepicker').value; // Fecha
+
+  
+        var JsonObjects
+        FormtData.append('FechaProceso', FechaProceso);
+
+        for (i = 0; i < FileExcelRipley.files.length; i++) {
+            FormtData.append(FileExcelRipley.files[i].name, FileExcelRipley.files[i]); // insercion  de valor y nombre de todos los archivos selecccionados
+        }
+
+        var ObjetoXMLHttpRequest = new XMLHttpRequest(); // metodo utilizado
+        ObjetoXMLHttpRequest.open("POST", "/ProcesoRipley/Procesar_Ripley");
+        ObjetoXMLHttpRequest.send(FormtData);
+        //ObjetoXMLHttpRequest.send(FormtData);
+
+        ObjetoXMLHttpRequest.onreadystatechange = function () {
+            if (ObjetoXMLHttpRequest.readyState === 4 && ObjetoXMLHttpRequest.status === 200) {
+                JsonObjects = JSON.parse(ObjetoXMLHttpRequest.responseText);
+
+                trHTML = '<tr><td>Index</td><td>Trama</td><td>Nombre Archivo</td></tr>';
+
+                var Index = 1;
+                Jsonresponse = JSON.parse(ObjetoXMLHttpRequest.responseText);
+                var result = $.parseJSON(ObjetoXMLHttpRequest.responseText);
+                var Contador = Object.keys(result).length;
+
+                $.each(result, function (k, v) {
+                   
+                    if (k <= 3) {
+                        $('#MontoTotalExcel').append(v._monto_Ripley);//Operaciones excel 
+                        $('#SumaComisionExcel').append(v._Comision);//Operaciones excel 
+                        $('#TotalTransferirExcel').append(v._Total_Transferir);//Operaciones excel 
+                   
+                    }
+               
+                    $('#MontoTotalTrama').html('');
+                    $('#SumaComisionTrama').html('');
+                    $('#TotalTransferirTrama').html('');
+
+                        $('#MontoTotalTrama').append(v._monto_Ripley);//Operaciones excel 
+                        $('#SumaComisionTrama').append(v._Comision);//Operaciones excel 
+                        $('#TotalTransferirTrama').append(v._Total_Transferir);//Operaciones excel 
+
+                
+
+                    if (v._Trama != null) {
+
+                        if (v._Message != null) {
+
+                            alert(v._Message);
+                        }
+                        else {
+
+                            trHTML += '<tr><td>' + Index + '</td>' + '<td>' + v._Trama + '</td>' + '<td>' + v._NombreArchivo + '.txt' + '</tr></tr>';
+                            Index++;
+                        }
+                    }
+
+
+
+                }
+
+
+                );
+
+                $('#tblOperaciones').append(trHTML);
+
+            }
+        };
+
+
+    }
+
+    //}
+
+</script>
+<script type="text/javascript">
+    function Procesar_Ripley1() {
+
+        ExcelToJSON = function () {
+
+            this.parseExcel = function (file) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var data = e.target.result();
+                    var workbook = XLSX.read(data, { type: 'binary' });
+
+                    workbook.SheetNames.forEach(function (sheetName) {
+                        // Here is your object
+                        var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                        var json_object = JSON.stringify(XL_row_object);
+                        console.log(json_object);
+
+                    })
+
+                };
+
+                reader.onerror = function (ex) {
+                    console.log(ex);
+                };
+
+                reader.readAsBinaryString(file);
+            };
+        };
+    }
+    function OperarExcelTo() {
+        $(function () {
+            $("#xlsxFile").change(function (event) {
+                var file = this.files[0],
+                    sheets;
+                XLSXReader(file, true, function (xlsxData) {
+                    sheets = xlsxData.sheets;
+                    // Do somehting with sheets. It's a
+                    // Javascript object with sheet names
+                    // as keys and data as value in form of 2D array
+                });
+            });
+        });
+
+    }
+
+    function Procesar_Operaciones_Ripley() {
+        var FechaProceso = document.getElementById('datepicker').value;
+        var data = JSON.stringify({
+            'Fecha': FechaProceso
+        });
+
+
+        $.ajax({
+            url: '/ProcesoRipley/Crear_Trama_Ripley',
+            contentType: 'application/json; charset=utf-8',
+            type: "POST",
+            //Data: "JsonBanco=" + JSON.stringify(JsonBanco),
+            data: data,
+            dataType: "json",
+
+
+            //context: document.body,
+
+            success: function (data, index) {
+                var trHTML;
+                for (i = 0; i <= 2898980000; i++) {
+                    if (data[i] != undefined) {
+
+                        alert(data[i]);
+
+                    }
+                    else {
+
+                        break;
+                    }
+                }
+
+
+            },
+            error: function (xhr) {
+                //debugger;
+                console.log(xhr.responseText);
+                alert("Error has occurred..");
+            }
+        });
+
+    }
+</script>

@@ -1,0 +1,114 @@
+﻿
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Regualarizacion Liqquidacion</title>
+    <script src="~/js/jquery-1.4.1.js"></script>
+    <script src="~/js/jquery-1.4.1.min.js"></script>
+    <script src="~/js/JavaScriptSoporte.js" type="text/javascript"></script>
+
+</head>
+<body>
+
+    @RenderPage("~/Views/Main_Page/_Header.cshtml")
+
+    @{
+        var FilePath = "~/Files/FileConstant/Cips.txt";
+        var Data = Server.MapPath(FilePath);
+        Array Userdate = File.ReadAllLines(Data);
+
+    //string Query = "select * from pagoefectivo.ordenpago  where idordenpago=4696146";
+    }
+
+    <h1>Regualirización de la liquidadción</h1>
+    <p>Leer Archivo de liquidacion</p>
+
+    @RenderPage("~/Views/Main_Page/_Footer.cshtml");
+    <ol>
+        @foreach (string s in Userdate)
+        {
+            <li>@s</li>
+
+        }
+    </ol>
+    <table style="border:solid;border-color:silver" border="1" id="tbl_CipsMovistar">
+        <tr><th>Cips Movistar</th></tr>
+
+    </table>
+    <input type="submit" value="Procesar Liquidación" name="Procesar" id="Procesar_Liquidacion" />
+    <script type="text/javascript">
+
+        $('#Procesar_Liquidacion').click(function(){
+        
+       
+        alert("Stard");
+        var JsonObjet = [];
+        var TemplateShowCIp='<tr><th>Cips Movistar</th></tr>';
+
+        @foreach (string s in Userdate)
+        {
+            <text>
+        JsonObjet.push(@s);
+
+
+        </text>
+
+
+        }
+
+        alert (JsonObjet.length);
+
+        //for(var i =0;i<JsonObjet.length;i++)
+        //{
+        //    alert(JsonObjet[i].Cips);
+
+        //    TemplateShowCIp+='<tr><td>'+JsonObjet[i].Cips.toString()+'</td></tr>'
+
+
+        //}
+
+        //document.getElementById("tbl_CipsMovistar").innerHTML=TemplateShowCIp;
+
+        procesar_liquidacion(JsonObjet);
+        });
+
+
+
+        function procesar_liquidacion(array)
+        {
+
+            var datas = JSON.stringify(array);
+            var d = ['s', 'f', 'g', 'gg'];
+            //var data = JSON.stringify({
+            //    'Banco': Banco
+            //});
+
+
+            $.ajax({
+                url:"Procesar_Liqudiacion/Index",
+                contentType: 'application/json; charset=utf-8',
+                type:"POST",
+                data: JSON.stringify(array),
+                datatype:"json",
+                success:function(data,index){
+                    alert(data);
+
+                },
+
+
+
+                error: function (xhr) {
+                    //debugger;
+                    console.log(xhr.responseText);
+                    alert("Error has occurred..");
+                }
+            });
+
+        }
+
+
+    </script>
+
+</body>
+</html>

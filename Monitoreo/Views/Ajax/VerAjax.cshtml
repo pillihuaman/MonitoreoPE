@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "VerAjax";
+}
+
+<script src="~/js/jquery-1.4.1.js"></script>
+<script src="~/js/jquery-1.4.1.min.js"></script>
+<div id="IDPrimero"></div>
+<script  type="text/javascript">
+    //String.prototype.supplant = function (o) {
+    //    return this.replace(/{([^{}]*)}/g,
+    //    function (a, b) {
+    //        var r = o[b];
+    //        return typeof r === 'string' ?
+    //            r : a;
+    //    }
+    //    );
+    //};
+  
+    //var Objeto = { "Id": 1, "Nombre": "Mendel", "Apellido": {"Paterno":"pillihuaman","Materno":"Hurtado"}}
+
+    //alert(Objeto.Id);
+    //alert(Objeto.Apellido.Materno);
+    for (i = 0; i <= 23; i++) {
+        var Data = { "first": "Zarmir", "last": "Pillihuaman", "border": 2+i }
+
+        var template = '<table border=' + Data.border + '>'
+            + '<tr><th>Last</th><td>' + Data.last + '</td></tr>'
+            + '<tr><th>Last</th><td>' + Data.last + '</td></tr>'
+            + '</table>';
+
+      
+        document.getElementById("IDPrimero").innerHTML = template;
+        alert(i);
+        console.log(template);
+            //alert(i);
+            //alert(template);
+    }
+    
+
+</script>
+<h2>VerAjax</h2>
+
