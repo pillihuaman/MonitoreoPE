@@ -15,7 +15,7 @@ namespace Monitoreo.Models
 
         public static Queue<string> SBK(string Banco)
         {
-            string fileName = string.Format(@"F:\ArchivosPara Evaluar\RegistroDeProveedores\EstadoBancarios\ScriptProveedores\BackUpAllFileProveedores\FC {0}.sql", Guid.NewGuid());
+            string fileName = string.Format(@"F:\ArchivosPara Evaluar\RegistroDeProveedores\EstadoBancarios\ScriptProveedores\BackUpAllFileProveedores\SBK {0}.sql", Guid.NewGuid());
             Queue<string> Final_CIPS = new Queue<string>();
              Queue<string> Final_CIPS_mas_Fechas = new Queue<string>();
 
@@ -178,7 +178,7 @@ namespace Monitoreo.Models
 
         public static Queue<string> Creates_IBK(string Banco)
         {
-            string fileName = string.Format(@"F:\ArchivosPara Evaluar\RegistroDeProveedores\EstadoBancarios\ScriptProveedores\BackUpAllFileProveedores\FC {0}.sql", Guid.NewGuid());
+            string fileName = string.Format(@"F:\ArchivosPara Evaluar\RegistroDeProveedores\EstadoBancarios\ScriptProveedores\BackUpAllFileProveedores\IBK {0}.sql", Guid.NewGuid());
             Queue<string> Final_CIPS = new Queue<string>();
             Queue<string> Final_CIPS_mas_Fechas = new Queue<string>();
             try
@@ -661,7 +661,7 @@ namespace Monitoreo.Models
 
         public static Queue<string> Creates_WU(string Banco)
         {
-            string fileName = string.Format(@"F:\ArchivosPara Evaluar\RegistroDeProveedores\EstadoBancarios\ScriptProveedores\BackUpAllFileProveedores\FC {0}.sql", Guid.NewGuid());
+            string fileName = string.Format(@"F:\ArchivosPara Evaluar\RegistroDeProveedores\EstadoBancarios\ScriptProveedores\BackUpAllFileProveedores\WU {0}.sql", Guid.NewGuid());
 
             
             Queue<string> Final_CIPS = new Queue<string>();
@@ -897,7 +897,7 @@ namespace Monitoreo.Models
 
         public static Queue<string> Creates_BIF(string Banco)
         {
-            string fileName = string.Format(@"F:\ArchivosPara Evaluar\RegistroDeProveedores\EstadoBancarios\ScriptProveedores\BackUpAllFileProveedores\FC {0}.sql", Guid.NewGuid());
+            string fileName = string.Format(@"F:\ArchivosPara Evaluar\RegistroDeProveedores\EstadoBancarios\ScriptProveedores\BackUpAllFileProveedores\BIF {0}.sql", Guid.NewGuid());
 
             Queue<string> Final_CIPS = new Queue<string>();
             Queue<string> Final_CIPS_mas_Fechas = new Queue<string>();
