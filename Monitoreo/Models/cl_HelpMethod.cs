@@ -155,7 +155,7 @@ namespace Monitoreo.Models
             {
                 string matS;
                 int numeroIndex = 0;
-                Regex re = new Regex(@"5\d+");
+                Regex re = new Regex(@"6\d+");
     
     
                 //CALCULAR ULTIMOS CIPS ACTIVOS.
