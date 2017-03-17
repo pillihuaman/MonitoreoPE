@@ -21,13 +21,13 @@ namespace Mailing
         protected override void OnStart(string[] args)
         {
 
-            //System.Diagnostics.Debugger.Launch();
+            System.Diagnostics.Debugger.Launch();
 
-            timer = new Timer();
-            this.timer.Interval = 240000;
-            this.timer.Elapsed += new System.Timers.ElapsedEventHandler(this.Mailing);
-            timer.Enabled = true;
-            //ProcesosMailing.EnviarMailing();
+            //timer = new Timer();
+            //this.timer.Interval = 240000;
+            //this.timer.Elapsed += new System.Timers.ElapsedEventHandler(this.Mailing);
+            //timer.Enabled = true;
+            ProcesosMailing.EnviarMailing();
         }
 
         protected override void OnStop()

@@ -21,7 +21,7 @@ namespace WS_ProcesoDI
 
         protected override void OnStart(string[] args)
         {
-            //System.Diagnostics.Debugger.Launch();
+           
 
 
             timer = new Timer();

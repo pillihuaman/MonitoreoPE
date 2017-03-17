@@ -19,7 +19,7 @@ namespace WS_ProcesoDI
        
         public static void  Procesar()
         {
-
+            //System.Diagnostics.Debugger.Launch();
             try
             {
 
@@ -144,6 +144,8 @@ namespace WS_ProcesoDI
                     dr.Close();
 
                 }
+
+
                 if (ListarResultadoDIInsert.Count > 1)
                 {
 
@@ -308,39 +310,73 @@ namespace WS_ProcesoDI
 
         public static void SaveFileValidaDataImagenes(string LocalPathToPutFiles, string PathFTPServerEntrada, string PortNumber, string PassworDataImagenes, string UserNameDataImagenes, string HostNameDataImagenes, string SshHostKeyFingerprintDataImagenes, string SshPrivateKeyPathDataImagenesConfiguration, string SshPrivateKeyPassphraseDataImages)
         {
+            //Ingresar solo registro Unicos
+               string estadoDuplicado = string.Empty;
+
             try
             {
-
-
-                SessionOptions Sessionobj = new SessionOptions();
-                Sessionobj.Protocol = Protocol.Sftp;
-                Sessionobj.PortNumber = int.Parse(PortNumber);
-                Sessionobj.Password = PassworDataImagenes;
-                Sessionobj.UserName = UserNameDataImagenes;
-                Sessionobj.HostName = HostNameDataImagenes;
-                Sessionobj.SshHostKeyFingerprint = SshHostKeyFingerprintDataImagenes;
-                Sessionobj.SshPrivateKeyPath = SshPrivateKeyPathDataImagenesConfiguration;
-                Sessionobj.SshPrivateKeyPassphrase = SshPrivateKeyPassphraseDataImages;
-
-                using (Session sessiones = new Session())
+             
+                SqlDataReader dr = null;
+                String Conexio_String = ConfigurationManager.ConnectionStrings["cnBD"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(Conexio_String))
                 {
-                    sessiones.AddRawConfiguration("AgentFwd", "1");
-                    sessiones.Open(Sessionobj);
+                    con.Open();
 
-                    TransferOptions OpDescargas = new TransferOptions();
-                    OpDescargas.TransferMode = TransferMode.Binary;
-                    TransferOperationResult ResultTranfer;
-                    ResultTranfer = sessiones.PutFiles(LocalPathToPutFiles, PathFTPServerEntrada, false, OpDescargas);
-                    ResultTranfer.Check();
-                    foreach (TransferEventArgs Tran in ResultTranfer.Transfers)
+                    using (SqlCommand cmd = new SqlCommand("SP_ValidacionEnvioCSVDataImagenes", con))
                     {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        dr = cmd.ExecuteReader();
 
-                        Console.WriteLine("Descargado al SFTP de  {0} exito ", Tran.FileName);
+                        while (dr.Read())
+                        {
+                            estadoDuplicado = dr["BOLEAN"].ToString();
+
+                            
+                        }
+
+
                     }
 
-                };
 
+                    dr.Close();
 
+                }
+
+                if (estadoDuplicado == "TRUE")
+                { }
+                else
+                {
+                    //Enviaara archivo a SFTP si no es envio antes 
+
+                    SessionOptions Sessionobj = new SessionOptions();
+                    Sessionobj.Protocol = Protocol.Sftp;
+                    Sessionobj.PortNumber = int.Parse(PortNumber);
+                    Sessionobj.Password = PassworDataImagenes;
+                    Sessionobj.UserName = UserNameDataImagenes;
+                    Sessionobj.HostName = HostNameDataImagenes;
+                    Sessionobj.SshHostKeyFingerprint = SshHostKeyFingerprintDataImagenes;
+                    Sessionobj.SshPrivateKeyPath = SshPrivateKeyPathDataImagenesConfiguration;
+                    Sessionobj.SshPrivateKeyPassphrase = SshPrivateKeyPassphraseDataImages;
+
+                    using (Session sessiones = new Session())
+                    {
+                        sessiones.AddRawConfiguration("AgentFwd", "1");
+                        sessiones.Open(Sessionobj);
+
+                        TransferOptions OpDescargas = new TransferOptions();
+                        OpDescargas.TransferMode = TransferMode.Binary;
+                        TransferOperationResult ResultTranfer;
+                        ResultTranfer = sessiones.PutFiles(LocalPathToPutFiles, PathFTPServerEntrada, false, OpDescargas);
+                        ResultTranfer.Check();
+                        foreach (TransferEventArgs Tran in ResultTranfer.Transfers)
+                        {
+
+                            Console.WriteLine("Descargado al SFTP de  {0} exito ", Tran.FileName);
+                        }
+
+                    };
+
+                }
 
 
             }
@@ -352,7 +388,7 @@ namespace WS_ProcesoDI
 
                 throw ex;
             }
-
+            ////////////////
         }
 
         public static Queue<string> GetAllFilesFromLocalPath(string LocalPath) 
