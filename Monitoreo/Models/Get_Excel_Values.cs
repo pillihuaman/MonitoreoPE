@@ -73,7 +73,7 @@ namespace Monitoreo.Models
                     string filtro = cips;//string that contains cips
                     Regex res = new Regex(@"\d+");
 
-                    if (filtro.Contains("BBVA") || filtro.Contains("bbva") || filtro.Contains("bb") || filtro.Contains("BB"))
+                    if (filtro.Contains("BBVA_") || filtro.Contains("bbva_") || filtro.Contains("bb") || filtro.Contains("BB"))
                     {
 
                         Match matt = res.Match(filtro);
@@ -86,7 +86,7 @@ namespace Monitoreo.Models
                         }
 
                     }
-                    else if (filtro.Contains("BCP") || filtro.Contains("bcp") || filtro.Contains("bc") || filtro.Contains("BC"))
+                    else if (filtro.Contains("BCP_") || filtro.Contains("bcp_") || filtro.Contains("bc") || filtro.Contains("BC"))
                     {
                         Match matt = res.Match(filtro);
                         if (matt.Success)
@@ -110,7 +110,7 @@ namespace Monitoreo.Models
                         }
 
                     }
-                    else if (filtro.Contains("SBK") || filtro.Contains("sbk") || filtro.Contains("sb") || filtro.Contains("SB"))
+                    else if (filtro.Contains("SBK") || filtro.Contains("sbk") || filtro.Contains("sk") || filtro.Contains("SK"))
                     {
 
                         Match matt = res.Match(filtro);
